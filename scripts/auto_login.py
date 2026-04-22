@@ -851,7 +851,7 @@ class AutoLogin:
                 
                 # 4. 等待重定向（会自动检测区域）
                 self.log("步骤4: 等待重定向", "STEP")
-                if not self.wait_redirect(page):
+                if not self.wait_redirect(page, wait=120):
                     self.shot(page, "重定向失败")
                     self.notify(False, "重定向失败")
                     sys.exit(1)

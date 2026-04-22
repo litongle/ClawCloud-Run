@@ -805,29 +805,17 @@ class AutoLogin:
   
             
                # 2. 点击 GitHub
-self.log("步骤2: 点击 GitHub", "STEP")
-try:
-    # 方法1：直接用文本定位（最可靠）
-    github_btn = page.locator('button:has-text("GitHub")').first
-    
-    # 如果找不到，尝试 Chakra 特定选择器
-    if not github_btn.is_visible(timeout=2000):
-        github_btn = page.locator('text=GitHub').first
-    
-    if github_btn.is_visible(timeout=3000):
-        time.sleep(random.uniform(0.5, 1.5))
-        github_btn.hover()
-        time.sleep(random.uniform(0.2, 0.5))
-        github_btn.click()
-        self.log("已点击 GitHub", "SUCCESS")
-    else:
-        raise Exception("GitHub 按钮不可见")
-        
-except Exception as e:
-    self.log(f"点击 GitHub 失败: {e}", "ERROR")
-    self.notify(False, f"找不到 GitHub 按钮: {e}")
-    sys.exit(1)
-                
+                self.log("步骤2: 点击 GitHub", "STEP")
+                if not self.click(page, [
+                    'button:has-text("GitHub")',
+                    'button.chakra-button:has-text("GitHub")',
+                    'text=GitHub',
+                ], "GitHub"):
+                    self.log("找不到按钮", "ERROR")
+                    self.shot(page, "无法点击github")
+                    self.notify(False, "找不到 GitHub 按钮")
+                    sys.exit(1)
+                    
                 time.sleep(3)
                 page.wait_for_load_state('networkidle', timeout=120000)
                 self.shot(page, "点击后")
